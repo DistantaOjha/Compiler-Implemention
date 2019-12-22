@@ -113,124 +113,124 @@ void yyerror(const char* msg);
 %%
 
 /* The Mini Python Grammar */
-PROGRAM:		CLASS_LIST  {
+PROGRAM:		CLASS_LIST  			{
 								$$ = new ProgramNode($1);
 								ByteCodeVisitor* visitor = new ByteCodeVisitor();
 								visitor->visit($$);
 							}
 ;
 
-CLASS_LIST:		  CLASS	 		{
-									$$ = new ClassListNode();
-									$$->insert($1);
-								}
+CLASS_LIST:		  CLASS	 			{
+								$$ = new ClassListNode();
+								$$->insert($1);
+							}
 
 				| CLASS '\n' CLASS_LIST	{
-											$$ = $3;
-											$$->insert($1);
-										}
+								$$ = $3;
+								$$->insert($1);
+							}
 ;
 
 
-CLASS:        _class_ IDS ':' '\n' PROCLIST _end_ '\n' 					{	
-																			$$ = new ClassNode($2, new FieldDefListNode(), $5);
-																		}
+CLASS:        _class_ IDS ':' '\n' PROCLIST _end_ '\n' 	{	
+								$$ = new ClassNode($2, new FieldDefListNode(), $5);
+							}
 														
-		    | _class_ IDS ':' '\n' _end_ '\n'           				{
-																			$$ = new ClassNode($2, new FieldDefListNode() ,new ProcDefListNode());
-																		}
+		    | _class_ IDS ':' '\n' _end_ '\n'  	{
+								$$ = new ClassNode($2, new FieldDefListNode() ,new ProcDefListNode());
+							}
 														
-		    | _class_ IDS ':' '\n' DATALIST '\n' _end_  '\n' 			{
-		    																$$ = new ClassNode($2, $5, new ProcDefListNode());
-		    															}
+		    | _class_ IDS ':' '\n' DATALIST '\n' _end_  '\n' 	{
+		    								$$ = new ClassNode($2, $5, new ProcDefListNode());
+									}
 		    											
-		    | _class_ IDS ':' '\n' DATALIST '\n' PROCLIST _end_  '\n' 	{
-		    																$$ = new ClassNode($2, $5, $7);
-		    													 	  	}
+		    | _class_ IDS ':' '\n' DATALIST '\n' PROCLIST _end_  '\n'   {
+		    								$$ = new ClassNode($2, $5, $7);
+		    								}
 		    
 ;
 
 PROCLIST:	   	  PROC_DEF '\n' 			{ 
-												$$ = new ProcDefListNode();
-												$$->insert($1);
-											}
+									$$ = new ProcDefListNode();
+									$$->insert($1);
+								}
 
-				| GEN_DEF '\n'  			{
-										 		$$ = new ProcDefListNode();
-										 		$$->insert($1);
-											}
+				| GEN_DEF '\n'  		{
+									$$ = new ProcDefListNode();
+									$$->insert($1);
+								}
 											
-			    | PROC_DEF '\n' PROCLIST 	{
-			    								$$ = $3;
-												$$->insert($1);
-			    							}
+			    | PROC_DEF '\n' PROCLIST 		{
+			    						$$ = $3;
+									$$->insert($1);
+			    					}
 			    								
-			    | GEN_DEF '\n' PROCLIST	    {
-			    								$$ = $3;
-												$$->insert($1);
-											}
+			    | GEN_DEF '\n' PROCLIST	 	{
+			    						$$ = $3;
+									$$->insert($1);
+								}
 ;
 
 DATALIST:        DATADEF	   	   			{ 
-												$$ = new FieldDefListNode();
-												$$->insert($1);
-											}
+									$$ = new FieldDefListNode();
+									$$->insert($1);
+								}
 
 			    								
-			    | DATADEF DATALIST	    	{
-			    								$$ = $2;
-												$$->insert($1);
-											}
+			    | DATADEF DATALIST	    		{
+			    						$$ = $2;
+									$$->insert($1);
+								}
 ;
 
 
-DATADEF :         _def_ IDS '=' EXPR  '\n' 	{
-												$$ = new FieldDefNode($2,$4);
-											}
+DATADEF :         _def_ IDS '=' EXPR  '\n' 			{
+									$$ = new FieldDefNode($2,$4);
+								}
 
 STMNT_LIST:		  STMNT STMNT_LIST 			{
-												$$ = $2;
-												$$->insert($1);
-											}
+									$$ = $2;
+									$$->insert($1);
+								}
 				
-				| STMNT						{
-												$$ = new StmntListNode();
-												$$->insert($1);
-											}
+				| STMNT				{
+									$$ = new StmntListNode();
+									$$->insert($1);
+								}
 				
 				| MATCH '\n' STMNT_LIST  	{
-												$$ = $3;
-												deque<StmntNode*> matStmntList = $1->stmnt_list;
-												for(int i= matStmntList.size()-1; i>=0; i--){
-													$$->insert(matStmntList[i]);
-												}	
-										 	}
+									$$ = $3;
+									deque<StmntNode*> matStmntList = $1->stmnt_list;
+									for(int i= matStmntList.size()-1; i>=0; i--){
+										$$->insert(matStmntList[i]);
+									}	
+								}
 										 
-				| MATCH '\n'				{
-												$$= $1;
-											}
+				| MATCH '\n'			{
+									$$= $1;
+								}
 					
 ;
 
 				
 STMNT:					
-				  ASSIGN '\n'				{$$ = $1;}
+				  ASSIGN '\n'			{$$ = $1;}
 				
-				| GEN_INIT '\n'				{$$ = $1;}
+				| GEN_INIT '\n'			{$$ = $1;}
 				
-				| YIELD '\n'				{$$ = $1;}
+				| YIELD '\n'			{$$ = $1;}
 				
-				| RETURN '\n'				{$$ = $1;}
+				| RETURN '\n'			{$$ = $1;}
 			
-				| IF '\n'					{$$ = $1;}
+				| IF '\n'			{$$ = $1;}
 			
-				| WHILE '\n'				{$$ = $1;}
+				| WHILE '\n'			{$$ = $1;}
 				
 				| FOR '\n'              	{$$ = $1;}
 				
 				| PROC_CALL '\n'	    	{$$ = $1;}
 						
-				| VARDEC '\n'				{$$ = $1;}				
+				| VARDEC '\n'			{$$ = $1;}				
 ;
 
 
@@ -239,37 +239,37 @@ MATCH:        _match_ EXPR {matchComp = $2;} ':' '\n' MATCHBODY _end_ { $$ = $6;
 ;
 
 
-MATCHBODY:   	  EXPR ':' '\n' STMNT_LIST	{
-												BinExprNode* compareZero = new BinExprNode($1,matchComp,'-'); 
-												IfNode* ifnode = new IfNode(compareZero, $4);
-												$$ = new StmntListNode();
-												$$->insert(ifnode);											
-											}
+MATCHBODY:   	  EXPR ':' '\n' STMNT_LIST			{
+									BinExprNode* compareZero = new BinExprNode($1,matchComp,'-'); 
+									IfNode* ifnode = new IfNode(compareZero, $4);
+									$$ = new StmntListNode();
+									$$->insert(ifnode);											
+								}
 
 			    | EXPR ':' '\n' STMNT_LIST '\n' MATCHBODY {		    											
-			    											 BinExprNode* compareZero = new BinExprNode($1,matchComp,'-'); 
-															 IfNode* ifnode = new IfNode(compareZero, $4);
-			    											 $$= $6;
-			    											 $$->insert(ifnode);
-			    										  }
+			    						BinExprNode* compareZero = new BinExprNode($1,matchComp,'-'); 
+									IfNode* ifnode = new IfNode(compareZero, $4);
+			    						$$= $6;
+			    						$$->insert(ifnode);
+			    					       }
 ;
 
 
 
 GEN_DEF:		_gen_ IDS '(' PARAM_LIST ')' ':' '\n' STMNT_LIST _end_ '\n'  {
-																				$$ = new GenDefNode($2, $4, $8);
-																			 }
+											$$ = new GenDefNode($2, $4, $8);
+					      					     }
 ;
 
 
-GEN_INIT:		_gen_ IDS '=' IDS '(' ARG_LIST ')' 						{
-																			$$ = new GenInitNode($2,$4, $6);
-																		}
+GEN_INIT:		_gen_ IDS '=' IDS '(' ARG_LIST ')' 				{
+												$$ = new GenInitNode($2,$4, $6);
+											}
 ;
 
-YIELD: 		_yield_ EXPR												{
-																			$$ = new YieldNode($2);
-																		}
+YIELD: 		_yield_ EXPR								{
+												$$ = new YieldNode($2);
+											}
 ;
 
 
