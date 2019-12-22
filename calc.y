@@ -274,121 +274,121 @@ YIELD: 		_yield_ EXPR								{
 
 
 
-PROC_DEF:		_def_ IDS '(' PARAM_LIST ')' ':' '\n' STMNT_LIST _end_ '\n'  {
-																				$$ = new ProcDefNode($2, $4, $8);
-																			}
+PROC_DEF:		_def_ IDS '(' PARAM_LIST ')' ':' '\n' STMNT_LIST _end_ '\n'  	{
+												$$ = new ProcDefNode($2, $4, $8);
+											}
 ;
 
-ASSIGN:       	IDS '=' EXPR            								{
-																			$$ = new VarAssignNode($1, $3);
-																		}
+ASSIGN:       	IDS '=' EXPR            						{
+												$$ = new VarAssignNode($1, $3);
+											}
 ;
 
-RETURN: 		_return_ EXPR											{
-																			$$ = new ReturnNode($2);
-																		}
+RETURN: 		_return_ EXPR							{
+												$$ = new ReturnNode($2);
+											}
 ;	
 
-IF:				_if_ EXPR ':' '\n' STMNT_LIST _end_ 					{
-																			$$ = new IfNode($2, $5);
-																		}
+IF:				_if_ EXPR ':' '\n' STMNT_LIST _end_ 			{
+												$$ = new IfNode($2, $5);
+											}
 ;
 
-WHILE:  		_while_ EXPR ':' '\n' STMNT_LIST _end_ 					{
-																			$$ = new WhileNode($2, $5);
-																		}
+WHILE:  		_while_ EXPR ':' '\n' STMNT_LIST _end_ 				{
+												$$ = new WhileNode($2, $5);
+											}
 ;
 
 FOR:   			_for_ IDS _in_ EXPR '~' EXPR _by_ EXPR ':' '\n' STMNT_LIST _end_ {
-																					$$ = new ForLoopNode($2,$4,$6,$8,$11);
-																				 }
+												$$ = new ForLoopNode($2,$4,$6,$8,$11);
+											 }
 ;
 
 
-PROC_CALL:		   IDS '(' ARG_LIST ')'  								{
-																			$$ = new ProcCallNode($1, $3);
-										 								}
+PROC_CALL:		   IDS '(' ARG_LIST ')'  					{
+												$$ = new ProcCallNode($1, $3);
+										 	}
 										 								 
-				| IDS _from_ IDS '(' ARG_LIST ')'						{
-																			$$ = new ProcCallNode($1, $3, $5);
-																		}
+				| IDS _from_ IDS '(' ARG_LIST ')'			{
+												$$ = new ProcCallNode($1, $3, $5);
+											}
 ;
 
 
 
-PARAM_LIST:		 /* Empty String */ 									{
-																			$$= new ParamListNode();
-																		}
+PARAM_LIST:		 /* Empty String */ 						{
+												$$= new ParamListNode();
+											}
 				 
-				 | NEMPTY_PARAM_LIST    								{$$= $1;}
+				 | NEMPTY_PARAM_LIST    				{$$= $1;}
 ;
 
 
-NEMPTY_PARAM_LIST: 		 IDS            								{
-																			$$ = new ParamListNode();
-				 															$$->insert($1);
-																		}
+NEMPTY_PARAM_LIST: 		 IDS            					{
+												$$ = new ParamListNode();
+												$$->insert($1);
+											}
 										
-					   | IDS ',' NEMPTY_PARAM_LIST 						{
-					   														$$ = $3;
-				 															$$->insert($1);
-					   													}
+					   | IDS ',' NEMPTY_PARAM_LIST 			{
+					   							$$ = $3;
+				 								$$->insert($1);
+											}
 ;
 
-ARG_LIST:		   /* Empty String */ 									{
-																			$$ = new ArgListNode();
-																		}
+ARG_LIST:		   /* Empty String */ 						{
+												$$ = new ArgListNode();
+											}
 				 
-				 | NEMPTY_ARG_LIST    									{$$= $1;}
+				 | NEMPTY_ARG_LIST    					{$$= $1;}
 ;
 
 
-NEMPTY_ARG_LIST: 		EXPR											{
-																			$$ = new ArgListNode();
-				 															$$->insert($1);
-																		}
+NEMPTY_ARG_LIST: 		EXPR							{
+												$$ = new ArgListNode();
+				 								$$->insert($1);
+											}
 
-					| EXPR  ',' NEMPTY_ARG_LIST							{
-					 														$$ = $3;
-					 														$$->insert($1);	
-					 					 								}
+					| EXPR  ',' NEMPTY_ARG_LIST			{
+					 							$$ = $3;
+					 							$$->insert($1);	
+					 					 	}
 ;
 
-EXPR:        EXPR '+' TERM          									{ $$ = new BinExprNode($1, $3, '+'); }
+EXPR:        EXPR '+' TERM          							{ $$ = new BinExprNode($1, $3, '+'); }
 
-		   | EXPR '-' TERM          									{ $$ = new BinExprNode($1,$3, '-'); }
+		   | EXPR '-' TERM          						{ $$ = new BinExprNode($1,$3, '-'); }
 
-           | TERM          		 										{ $$ = $1;	}
-;
-
-
-TERM:        TERM '*' FACTOR											{ $$ = new BinExprNode($1,$3, '*'); }
-
-		   | TERM '/' FACTOR											{ $$ = new BinExprNode($1,$3, '/'); }	
-
-		   | FACTOR														{ $$ = $1; }
+           | TERM          		 						{ $$ = $1;	}
 ;
 
 
-FACTOR:		 '(' EXPR ')'			 									{ $$ = $2; }
+TERM:        TERM '*' FACTOR								{ $$ = new BinExprNode($1,$3, '*'); }
+
+		   | TERM '/' FACTOR							{ $$ = new BinExprNode($1,$3, '/'); }	
+
+		   | FACTOR								{ $$ = $1; }
+;
+
+
+FACTOR:		 '(' EXPR ')'			 					{ $$ = $2; }
 		    	
-		    | NUM                 										{ $$ = new NumNode($1); }
+		    | NUM                 						{ $$ = new NumNode($1); }
             
-            | IDS				  										{ $$ = $1; }
+            | IDS				  					{ $$ = $1; }
             
-            | PROC_CALL           										{ $$ = $1; }
+            | PROC_CALL           							{ $$ = $1; }
             
              	
-            | '~' IDS													{ $$ = new GenInvokNode($2); }
+            | '~' IDS									{ $$ = new GenInvokNode($2); }
             
 ;
 
-VARDEC:	   		_def_ IDS '=' EXPR            							 {
-																			$$ = new VarDefNode($2, $4);
-																		 }
+VARDEC:	   		_def_ IDS '=' EXPR            					{
+												$$ = new VarDefNode($2, $4);
+											 }
 ;
 
-IDS:   ID   															{$$= new IdNode($1);}
+IDS:   ID   										{$$= new IdNode($1);}
 ;
 
 %%
