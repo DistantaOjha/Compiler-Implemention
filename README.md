@@ -4,7 +4,7 @@ Full Compiler Implemention for a custom programming language (MiniPython) using 
 
 MiniPython is a Python like programming language which runs on jvm. It is written on a file with .mipy extension. It scans and parses the MiniPython program and wrties the JavaByteCode equivalent of the program in .class file. 
 
-**Features*
+**Features**
 
 - Variable Storage for integers.
 
