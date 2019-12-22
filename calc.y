@@ -125,7 +125,7 @@ CLASS_LIST:		  CLASS	 			{
 								$$->insert($1);
 							}
 
-				| CLASS '\n' CLASS_LIST	{
+			| CLASS '\n' CLASS_LIST		{
 								$$ = $3;
 								$$->insert($1);
 							}
@@ -136,17 +136,17 @@ CLASS:        _class_ IDS ':' '\n' PROCLIST _end_ '\n' 	{
 								$$ = new ClassNode($2, new FieldDefListNode(), $5);
 							}
 														
-		    | _class_ IDS ':' '\n' _end_ '\n'  	{
+	| _class_ IDS ':' '\n' _end_ '\n'  		{
 								$$ = new ClassNode($2, new FieldDefListNode() ,new ProcDefListNode());
 							}
 														
-		    | _class_ IDS ':' '\n' DATALIST '\n' _end_  '\n' 	{
+	| _class_ IDS ':' '\n' DATALIST '\n' _end_  '\n' 		{
 		    								$$ = new ClassNode($2, $5, new ProcDefListNode());
 									}
 		    											
-		    | _class_ IDS ':' '\n' DATALIST '\n' PROCLIST _end_  '\n'   {
+	| _class_ IDS ':' '\n' DATALIST '\n' PROCLIST _end_  '\n'  	 {
 		    								$$ = new ClassNode($2, $5, $7);
-		    								}
+		    							 }
 		    
 ;
 
@@ -155,17 +155,17 @@ PROCLIST:	   	  PROC_DEF '\n' 			{
 									$$->insert($1);
 								}
 
-				| GEN_DEF '\n'  		{
+			| GEN_DEF '\n'  			{
 									$$ = new ProcDefListNode();
 									$$->insert($1);
 								}
 											
-			    | PROC_DEF '\n' PROCLIST 		{
+			| PROC_DEF '\n' PROCLIST 		{
 			    						$$ = $3;
 									$$->insert($1);
 			    					}
 			    								
-			    | GEN_DEF '\n' PROCLIST	 	{
+			| GEN_DEF '\n' PROCLIST	 		{
 			    						$$ = $3;
 									$$->insert($1);
 								}
@@ -177,7 +177,7 @@ DATALIST:        DATADEF	   	   			{
 								}
 
 			    								
-			    | DATADEF DATALIST	    		{
+		| DATADEF DATALIST	    			{
 			    						$$ = $2;
 									$$->insert($1);
 								}
@@ -193,20 +193,20 @@ STMNT_LIST:		  STMNT STMNT_LIST 			{
 									$$->insert($1);
 								}
 				
-				| STMNT				{
+			| STMNT					{
 									$$ = new StmntListNode();
 									$$->insert($1);
 								}
 				
-				| MATCH '\n' STMNT_LIST  	{
+			| MATCH '\n' STMNT_LIST  		{
 									$$ = $3;
 									deque<StmntNode*> matStmntList = $1->stmnt_list;
 									for(int i= matStmntList.size()-1; i>=0; i--){
 										$$->insert(matStmntList[i]);
-									}	
+								}	
 								}
 										 
-				| MATCH '\n'			{
+			| MATCH '\n'				{
 									$$= $1;
 								}
 					
@@ -246,12 +246,12 @@ MATCHBODY:   	  EXPR ':' '\n' STMNT_LIST			{
 									$$->insert(ifnode);											
 								}
 
-			    | EXPR ':' '\n' STMNT_LIST '\n' MATCHBODY {		    											
+		| EXPR ':' '\n' STMNT_LIST '\n' MATCHBODY 	{		    											
 			    						BinExprNode* compareZero = new BinExprNode($1,matchComp,'-'); 
 									IfNode* ifnode = new IfNode(compareZero, $4);
 			    						$$= $6;
 			    						$$->insert(ifnode);
-			    					       }
+			    					}
 ;
 
 
@@ -267,7 +267,7 @@ GEN_INIT:		_gen_ IDS '=' IDS '(' ARG_LIST ')' 				{
 											}
 ;
 
-YIELD: 		_yield_ EXPR								{
+YIELD: 		         _yield_ EXPR							{
 												$$ = new YieldNode($2);
 											}
 ;
@@ -279,7 +279,7 @@ PROC_DEF:		_def_ IDS '(' PARAM_LIST ')' ':' '\n' STMNT_LIST _end_ '\n'  	{
 											}
 ;
 
-ASSIGN:       	IDS '=' EXPR            						{
+ASSIGN:       		IDS '=' EXPR            					{
 												$$ = new VarAssignNode($1, $3);
 											}
 ;
@@ -289,7 +289,7 @@ RETURN: 		_return_ EXPR							{
 											}
 ;	
 
-IF:				_if_ EXPR ':' '\n' STMNT_LIST _end_ 			{
+IF:			_if_ EXPR ':' '\n' STMNT_LIST _end_ 				{
 												$$ = new IfNode($2, $5);
 											}
 ;
@@ -309,7 +309,7 @@ PROC_CALL:		   IDS '(' ARG_LIST ')'  					{
 												$$ = new ProcCallNode($1, $3);
 										 	}
 										 								 
-				| IDS _from_ IDS '(' ARG_LIST ')'			{
+			| IDS _from_ IDS '(' ARG_LIST ')'				{
 												$$ = new ProcCallNode($1, $3, $5);
 											}
 ;
@@ -320,7 +320,7 @@ PARAM_LIST:		 /* Empty String */ 						{
 												$$= new ParamListNode();
 											}
 				 
-				 | NEMPTY_PARAM_LIST    				{$$= $1;}
+			| NEMPTY_PARAM_LIST    						{$$= $1;}
 ;
 
 
@@ -329,7 +329,7 @@ NEMPTY_PARAM_LIST: 		 IDS            					{
 												$$->insert($1);
 											}
 										
-					   | IDS ',' NEMPTY_PARAM_LIST 			{
+				| IDS ',' NEMPTY_PARAM_LIST 				{
 					   							$$ = $3;
 				 								$$->insert($1);
 											}
@@ -339,7 +339,7 @@ ARG_LIST:		   /* Empty String */ 						{
 												$$ = new ArgListNode();
 											}
 				 
-				 | NEMPTY_ARG_LIST    					{$$= $1;}
+			| NEMPTY_ARG_LIST    						{$$= $1;}
 ;
 
 
@@ -348,7 +348,7 @@ NEMPTY_ARG_LIST: 		EXPR							{
 				 								$$->insert($1);
 											}
 
-					| EXPR  ',' NEMPTY_ARG_LIST			{
+				| EXPR  ',' NEMPTY_ARG_LIST				{
 					 							$$ = $3;
 					 							$$->insert($1);	
 					 					 	}
@@ -356,7 +356,7 @@ NEMPTY_ARG_LIST: 		EXPR							{
 
 EXPR:        EXPR '+' TERM          							{ $$ = new BinExprNode($1, $3, '+'); }
 
-		   | EXPR '-' TERM          						{ $$ = new BinExprNode($1,$3, '-'); }
+	   | EXPR '-' TERM          							{ $$ = new BinExprNode($1,$3, '-'); }
 
            | TERM          		 						{ $$ = $1;	}
 ;
@@ -364,15 +364,15 @@ EXPR:        EXPR '+' TERM          							{ $$ = new BinExprNode($1, $3, '+'); 
 
 TERM:        TERM '*' FACTOR								{ $$ = new BinExprNode($1,$3, '*'); }
 
-		   | TERM '/' FACTOR							{ $$ = new BinExprNode($1,$3, '/'); }	
+	| TERM '/' FACTOR								{ $$ = new BinExprNode($1,$3, '/'); }	
 
-		   | FACTOR								{ $$ = $1; }
+	| FACTOR									{ $$ = $1; }
 ;
 
 
 FACTOR:		 '(' EXPR ')'			 					{ $$ = $2; }
 		    	
-		    | NUM                 						{ $$ = new NumNode($1); }
+	    | NUM                 							{ $$ = new NumNode($1); }
             
             | IDS				  					{ $$ = $1; }
             
