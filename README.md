@@ -6,7 +6,7 @@ MiniPython is a Python like programming language which runs on Java Virtual Mach
 
 **Features**
 
-- Variable Storage for integers.
+- Integer variables.
 
 - All basic arithmatic operations
 
@@ -15,6 +15,8 @@ MiniPython is a Python like programming language which runs on Java Virtual Mach
 - Get integer input.
 
 - If-else statement (expression ==0?).
+
+- Switch Case statement
 
 - While loop (while expression!=0) and for-loop.
 
