@@ -2,7 +2,7 @@
 
 Full Compiler Implemention for a custom programming language (MiniPython) using Flex/Bison parser/scanner.
 
-MiniPython is a Python like programming language which runs on jvm. It is written on a file with .mipy extension. It scans and parses the MiniPython program and wrties the JavaByteCode equivalent of the program in .class file. 
+MiniPython is a Python like programming language which runs on Java Virtual Machine. It is written on a file with .mipy extension. It scans and parses the MiniPython program and wrties the JavaByteCode equivalent of the program in .class file. 
 
 **Features**
 
